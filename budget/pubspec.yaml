@@ -18,7 +18,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 5.4.3+416
 
 environment:
-  sdk: ">= 3.0.0"
+  sdk: ">=3.6.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -114,6 +114,7 @@ flutter_icons:
 dev_dependencies:
   drift_dev: ^2.14.0
   build_runner: ^2.4.7
+  flutter_lints: ^6.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
