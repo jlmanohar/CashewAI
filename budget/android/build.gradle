@@ -1,17 +1,4 @@
-buildscript {
-    ext.kotlin_version = '1.9.0'
-    repositories {
-        google()
-        jcenter()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.gms:google-services:4.3.14'
-    }
-}
+ext.kotlin_version = '2.2.20'
 
 allprojects {
     repositories {
@@ -24,6 +11,39 @@ allprojects {
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            project.android {
+                // Force minimum compileSdk 34 for all plugin projects (not :app which sets its own)
+                // This fixes android:attr/lStar and similar API 31+ resource attribute errors
+                if (project.name != 'app') {
+                    compileSdkVersion 34
+                }
+                if (namespace == null) {
+                    def manifestFile = project.file("src/main/AndroidManifest.xml")
+                    if (manifestFile.exists()) {
+                        def manifest = new XmlParser().parse(manifestFile)
+                        namespace = manifest.@package
+                    } else {
+                        namespace = "com.example.${project.name.replaceAll('-', '.')}"
+                    }
+                }
+                compileOptions {
+                    sourceCompatibility JavaVersion.VERSION_1_8
+                    targetCompatibility JavaVersion.VERSION_1_8
+                }
+                try {
+                    kotlinOptions {
+                        jvmTarget = "1.8"
+                    }
+                } catch (Exception e) {
+                    // kotlinOptions not present
+                }
+            }
+        }
+    }
+}
+subprojects {
     project.evaluationDependsOn(':app')
 }
 
