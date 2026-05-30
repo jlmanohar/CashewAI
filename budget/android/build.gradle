@@ -3,14 +3,13 @@ ext.kotlin_version = '2.2.20'
 allprojects {
     repositories {
         google()
-        jcenter()
         mavenCentral()
     }
 }
 
-rootProject.buildDir = '../build'
+rootProject.layout.buildDirectory.set(file('../build'))
 subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
+    layout.buildDirectory.set(rootProject.layout.buildDirectory.dir(project.name))
     afterEvaluate { project ->
         if (project.hasProperty('android')) {
             project.android {
@@ -29,12 +28,12 @@ subprojects {
                     }
                 }
                 compileOptions {
-                    sourceCompatibility JavaVersion.VERSION_1_8
-                    targetCompatibility JavaVersion.VERSION_1_8
+                    sourceCompatibility JavaVersion.VERSION_17
+                    targetCompatibility JavaVersion.VERSION_17
                 }
                 try {
                     kotlinOptions {
-                        jvmTarget = "1.8"
+                        jvmTarget = "17"
                     }
                 } catch (Exception e) {
                     // kotlinOptions not present
@@ -48,5 +47,5 @@ subprojects {
 }
 
 tasks.register("clean", Delete) {
-    delete rootProject.buildDir
+    delete rootProject.layout.buildDirectory
 }

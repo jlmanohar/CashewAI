@@ -56,3 +56,7 @@ keystore.jks
 
 /.firebase
 .firebase/
+
+# Dev Firebase configs — never commit
+android/app/google-services-laptop-dev.json
+android/app/google-services-old.json
