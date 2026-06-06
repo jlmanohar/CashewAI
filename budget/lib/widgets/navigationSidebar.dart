@@ -268,6 +268,11 @@ class NavigationSidebarState extends State<NavigationSidebar> {
                                 navBarIconDataKey: "budgets",
                                 currentPageIndex: selectedIndex,
                               ),
+                              if (appStateSettings["showAiPage"] ?? true)
+                                NavigationSidebarButtonWithNavBarIconData(
+                                  navBarIconDataKey: "ai",
+                                  currentPageIndex: selectedIndex,
+                                ),
                               NavigationSidebarButtonWithNavBarIconData(
                                 navBarIconDataKey: "goals",
                                 currentPageIndex: selectedIndex,

@@ -471,6 +471,25 @@ class _EditHomePageState extends State<EditHomePage> {
               },
             ),
           ),
+          SliverToBoxAdapter(
+            child: HomePageEditRowEntry(
+              key: const ValueKey("showAiPage"),
+              canReorder: false,
+              currentReorder: false,
+              switchValue: appStateSettings["showAiPage"] ?? true,
+              toggleSwitch: () {
+                bool newValue = !(appStateSettings["showAiPage"] ?? true);
+                updateSettings("showAiPage", newValue,
+                    updateGlobalState: true);
+                setState(() {});
+              },
+              iconData: navBarIconsData["ai"]!.iconData,
+              text: navBarIconsData["ai"]!.label.tr(),
+              extraWidgetsBelow: null,
+              index: 0,
+              onTap: null,
+            ),
+          ),
           SliverReorderableList(
             onReorderStart: (index) {
               HapticFeedback.heavyImpact();

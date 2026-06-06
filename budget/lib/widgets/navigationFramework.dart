@@ -28,6 +28,7 @@ import 'package:budget/pages/transactionsListPage.dart';
 import 'package:budget/pages/upcomingOverdueTransactionsPage.dart';
 import 'package:budget/pages/walletDetailsPage.dart';
 import 'package:budget/pages/creditDebtTransactionsPage.dart';
+import 'package:budget/pages/aiPage.dart';
 import 'package:budget/struct/currencyFunctions.dart';
 import 'package:budget/struct/databaseGlobal.dart';
 import 'package:budget/struct/defaultPreferences.dart';
@@ -293,6 +294,7 @@ GlobalKey<AccountsPageState> accountsPageStateKey = GlobalKey();
 GlobalKey<GoogleAccountLoginButtonState> settingsGoogleAccountLoginButtonKey =
     GlobalKey();
 GlobalKey<NavigationSidebarState> sidebarStateKey = GlobalKey();
+GlobalKey<AiPageState> aiPageStateKey = GlobalKey();
 GlobalKey<GlobalLoadingProgressState> loadingProgressKey = GlobalKey();
 GlobalKey<GlobalLoadingIndeterminateState> loadingIndeterminateKey =
     GlobalKey();
@@ -377,6 +379,7 @@ class PageNavigationFrameworkState extends State<PageNavigationFramework> {
         key: upcomingOverdueTransactionsStateKey,
         overdueTransactions: null), //16
     CreditDebtTransactions(key: creditDebtTransactionsKey, isCredit: null), //17
+    AiPage(key: aiPageStateKey), //18
   ];
 
   late int currentPage = widget.widthSideNavigationBar <= 0
@@ -434,6 +437,14 @@ class PageNavigationFrameworkState extends State<PageNavigationFramework> {
 
       if (entireAppLoaded == false) {
         await runAllCloudFunctions(context);
+        if (appStateSettings["autoSmsSync"] == true &&
+            appStateSettings["readSmsPermission"] == true) {
+          try {
+            await AiPageState.triggerSmsAiSync(context, isAuto: true);
+          } catch (e) {
+            print("Error during automatic SMS sync on startup: $e");
+          }
+        }
       }
 
       // Do this after cloud functions attempt (i.e. if user is not signed in we can show it)

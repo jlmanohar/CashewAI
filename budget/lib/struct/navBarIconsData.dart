@@ -51,6 +51,13 @@ Map<String, NavBarIconData> getNavBarIconsData() {
       label: "budgets",
       navigationIndexedStackIndex: 2,
     ),
+    "ai": NavBarIconData(
+      iconData: appStateSettings["outlinedIcons"]
+          ? Icons.assistant_outlined
+          : Icons.assistant_rounded,
+      label: "Ai",
+      navigationIndexedStackIndex: 18,
+    ),
     "goals": NavBarIconData(
       iconData: appStateSettings["outlinedIcons"]
           ? Icons.savings_outlined

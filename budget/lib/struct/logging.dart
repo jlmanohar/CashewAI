@@ -50,7 +50,10 @@ captureLogs(Function body) {
     () async {
       await body();
     },
-    (error, stackTrace) {},
+    (error, stackTrace) {
+      logService.log("ERROR CAPTURED IN MAIN ZONE: $error");
+      logService.log(stackTrace.toString());
+    },
     zoneSpecification: ZoneSpecification(
       print: (Zone self, ZoneDelegate parent, Zone zone, String message) {
         logService.log(message);

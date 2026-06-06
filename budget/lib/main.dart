@@ -1,6 +1,7 @@
 import 'package:budget/functions.dart';
 import 'package:budget/pages/accountsPage.dart';
 import 'package:budget/pages/autoTransactionsPageEmail.dart';
+import 'package:budget/pages/aiPage.dart';
 import 'package:budget/struct/currencyFunctions.dart';
 import 'package:budget/struct/iconObjects.dart';
 import 'package:budget/struct/keyboardIntents.dart';
@@ -145,7 +146,18 @@ class App extends StatelessWidget {
         Widget mainWidget = OnAppResume(
           updateGlobalAppLifecycleState: true,
           onAppResume: () async {
+            print("DEBUG: onAppResume triggered. autoSmsSync: ${appStateSettings["autoSmsSync"]}, readSmsPermission: ${appStateSettings["readSmsPermission"]}, navigatorKey.currentContext: ${navigatorKey.currentContext}");
             await setHighRefreshRate();
+            if (appStateSettings["autoSmsSync"] == true &&
+                appStateSettings["readSmsPermission"] == true &&
+                navigatorKey.currentContext != null) {
+              try {
+                print("DEBUG: Calling triggerSmsAiSync on resume");
+                await AiPageState.triggerSmsAiSync(navigatorKey.currentContext!, isAuto: true);
+              } catch (e) {
+                print("Error during automatic SMS sync on app resume: $e");
+              }
+            }
           },
           child: InitializeBiometrics(
             child: InitializeNotificationService(

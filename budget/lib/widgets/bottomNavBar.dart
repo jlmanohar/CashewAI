@@ -60,6 +60,8 @@ class BottomNavBarState extends State<BottomNavBar> {
         upcomingOverdueTransactionsStateKey.currentState?.scrollToTop();
       if (navigationStackedIndex == 17)
         creditDebtTransactionsKey.currentState?.scrollToTop();
+      if (navigationStackedIndex == 18)
+        aiPageStateKey.currentState?.scrollToTop();
     } else {
       // We need to change to the navigation index
       widget.onChanged(navigationStackedIndex);
@@ -68,6 +70,7 @@ class BottomNavBarState extends State<BottomNavBar> {
   }
 
   int getNavigationStackedIndexFromBarIndex(int barIndex) {
+    bool showAiPage = appStateSettings["showAiPage"] ?? true;
     if (barIndex == 0) {
       return navBarIconsData[appStateSettings["customNavBarShortcut0"]]
               ?.navigationIndexedStackIndex ??
@@ -80,12 +83,15 @@ class BottomNavBarState extends State<BottomNavBar> {
       return navBarIconsData[appStateSettings["customNavBarShortcut2"]]
               ?.navigationIndexedStackIndex ??
           2;
+    } else if (barIndex == 3) {
+      return showAiPage ? 18 : 3;
     } else {
       return 3;
     }
   }
 
   int getNavigationBarIndexFromStackedIndex(int stackedIndex) {
+    bool showAiPage = appStateSettings["showAiPage"] ?? true;
     if (stackedIndex ==
         (navBarIconsData[appStateSettings["customNavBarShortcut0"]]
                 ?.navigationIndexedStackIndex ??
@@ -101,8 +107,12 @@ class BottomNavBarState extends State<BottomNavBar> {
                 ?.navigationIndexedStackIndex ??
             2))
       return 2;
+    else if (stackedIndex == 18)
+      return showAiPage ? 3 : 0;
+    else if (stackedIndex == 3)
+      return showAiPage ? 4 : 3;
     else
-      return 3;
+      return showAiPage ? 4 : 3;
   }
 
   @override
@@ -190,18 +200,32 @@ class BottomNavBarState extends State<BottomNavBar> {
                   },
                 ),
               ),
+              if (appStateSettings["showAiPage"] ?? true)
+                NavBarSpaceButton(
+                  onPress: () => onItemTapped(3),
+                  flex: 20,
+                  child: NavBarIcon(
+                    onItemTapped: onItemTapped,
+                    icon: navBarIconsData["ai"]!.iconData,
+                    navigationBarIndex: 3,
+                    currentNavigationBarIndex: navigationBarIndex,
+                  ),
+                ),
               NavBarSpaceButton(
-                onPress: () => onItemTapped(3),
+                onPress: () => onItemTapped(
+                    appStateSettings["showAiPage"] ?? true ? 4 : 3),
                 flex: 20,
                 child: NavBarIcon(
                   onItemTapped: onItemTapped,
                   icon: navBarIconsData["more"]!.iconData,
-                  navigationBarIndex: 3,
+                  navigationBarIndex:
+                      appStateSettings["showAiPage"] ?? true ? 4 : 3,
                   currentNavigationBarIndex: navigationBarIndex,
                 ),
               ),
               NavBarSpaceButton(
-                onPress: () => onItemTapped(3),
+                onPress: () => onItemTapped(
+                    appStateSettings["showAiPage"] ?? true ? 4 : 3),
                 flex: 9,
                 child: Container(),
               ),
@@ -298,6 +322,12 @@ class BottomNavBarState extends State<BottomNavBar> {
                 );
               },
             ),
+            if (appStateSettings["showAiPage"] ?? true)
+              NavigationDestination(
+                icon: Icon(navBarIconsData["ai"]!.iconData),
+                label: "Ai",
+                tooltip: "",
+              ),
             NavigationDestination(
               icon: Icon(navBarIconsData["more"]!.iconData),
               label: navBarIconsData["more"]!.label.tr(),
